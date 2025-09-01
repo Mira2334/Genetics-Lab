@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Генетика — теория, задания, тест</title>
+  <style>
+    :root{
+      --green:#3ba55d;
+      --dark:#1e2a22;
+      --light:#f7fff9;
+      --accent:#7ef6a1;
+      --danger:#ff6b6b;
+      --warning:#ffcc66;
+      --glass: rgba(255,255,255,.75);
+      --shadow: 0 10px 30px rgba(0,0,0,.2);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Noto Sans", Arial, sans-serif;
+      color:#143018;
+      background: #e8ffe8;
+      overflow-x:hidden;
+    }
+    /* Top navigation */
+    .nav{
+      position:sticky; top:0; z-index:1000;
+      background:linear-gradient(180deg, rgba(25,60,36,.95), rgba(25,60,36,.85));
+      backdrop-filter: blur(6px);
+      padding: 10px 14px;
+      box-shadow: var(--shadow);
+      display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;
+    }
+    .nav h1{
+      color:#fff; margin:4px 12px 4px 0; font-size:18px; letter-spacing:.3px; white-space:nowrap;
+    }
+    .tabs{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+    .tab-btn{
+      border:none; padding:10px 16px; border-radius:999px;
+      background:#e8ffe8; color:#0c2a14; font-weight:700; letter-spacing:.2px;
+      box-shadow:0 4px 14px rgba(0,0,0,.15); cursor:pointer; transition:.25s;
+    }
+    .tab-btn:hover{ transform:translateY(-1px); }
+    .tab-btn.active{ background:var(--accent); }
+    .wrap{ max-width:1100px; margin:20px auto; padding:16px; }
+    /* Section cards on top of vivid backgrounds */
+    section{
+      min-height: calc(100vh - 80px);
+      padding: 28px 14px 80px;
+      display:none;
+      position:relative;
+      background-size:cover; background-position:center; background-attachment: fixed;
+      border-bottom:8px solid rgba(0,0,0,.06);
+    }
+    section.active{ display:block; }
+    .glass{
+      background:var(--glass); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:20px; backdrop-filter: blur(6px); border:1px solid rgba(255,255,255,.6);
+    }
+    .hero-title{ font-size: clamp(26px, 3vw, 36px); margin:0 0 12px; }
+    .note{ font-size:14px; opacity:.8 }
+    .pill{ display:inline-block; padding:6px 10px; border-radius:999px; background:#fff; box-shadow:0 2px 10px rgba(0,0,0,.12); margin-right:8px; font-weight:600}
+    details{ margin:12px 0; }
+    summary{ cursor:pointer; font-weight:700 }
+    .grid{ display:grid; gap:16px; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); }
+    .btn{
+      display:inline-block; padding:10px 16px; border-radius:12px; border:none; cursor:pointer;
+      background:var(--green); color:#fff; font-weight:700; box-shadow:var(--shadow);
+      transition:.2s;
+    }
+    .btn:disabled{ filter:grayscale(.6); opacity:.6; cursor:not-allowed; }
+    .btn.alt{ background:#113b2a }
+    .btn.warn{ background:var(--warning); color:#212529 }
+    .btn.danger{ background:var(--danger) }
+    .muted{ opacity:.7 }
+    .rule{ background:#fff; border-left:6px solid var(--warning); padding:12px 14px; border-radius:12px; }
+    .timer{ font-weight:900; font-size:20px; padding:6px 10px; background:#000; color:#fff; display:inline-block; border-radius:10px; letter-spacing:1px }
+    .qa blockquote{ margin:8px 0; background:#fff; border-left:4px solid #7ed957; padding:8px 10px; border-radius:10px; }
+    .answer-key{ background:#fff; border-radius:12px; padding:12px; border:1px dashed #8fd19e }
+    .footer{ text-align:center; padding:24px; color:#234; font-size:12px }
+    /* Backgrounds - put files next to this HTML (same folder) */
+    #theory{ background-image: url('theory.jpg'); }
+    #tasks{ background-image: url('tasks.jpg'); }
+    #test{ background-image: url('test.jpg'); }
+    #homework{ background-image: radial-gradient(1200px 500px at 30% -20%, #c8ffd7 0, rgba(255,255,255,.6) 60%, #e6fff0 100%) }
+    /* Forms */
+    input[type="text"]{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid #b9e2c7; }
+    .q{ background:#fff; border-radius:14px; padding:12px; border:1px solid #e6f6ea }
+    .q legend{ font-weight:800; margin-bottom:6px }
+    .q label{ display:block; padding:6px 8px; border-radius:10px; }
+    .q input{ margin-right:6px }
+    .q label:hover{ background:#f2fff6 }
+    .disabled-overlay{
+      position:absolute; inset:0; background:rgba(255,255,255,.55);
+      display:none; align-items:center; justify-content:center; backdrop-filter: blur(2px);
+      border-radius:var(--radius);
+    }
+    .disabled-overlay.show{ display:flex }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <h1>🧬 Генетика</h1>
+    <div class="tabs">
+      <button class="tab-btn" data-tab="theory">Теория</button>
+      <button class="tab-btn" data-tab="tasks">Задания</button>
+      <button class="tab-btn" data-tab="test">Тест</button>
+      <button class="tab-btn" data-tab="homework">Домашнее задание</button>
+    </div>
+  </div>
+
+  <!-- Теория -->
+  <section id="theory" class="active">
+    <div class="wrap">
+      <div class="glass">
+        <h2 class="hero-title">Законы наследования и поведение хромосом</h2>
+        <p class="note">Вкратце и по делу — с живыми примерами.</p>
+        <div class="grid">
+          <div class="glass">
+            <span class="pill">Хромосомная теория</span>
+            <p>Генетические закономерности наследования связаны с поведением хромосом в клетке. Хромосомы являются материальными носителями генов, поэтому процессы митоза и мейоза объясняют, как признаки передаются от родителей к потомству.</p>
+            <ol>
+              <li>Гены расположены в хромосомах в определённой последовательности;</li>
+              <li>каждая хромосома содержит множество генов;</li>
+              <li>хромосомы и гены ведут себя одинаково при делении клеток.</li>
+            </ol>
+            <span class="pill">Мейоз — основа наследственности</span>
+            <ul>
+              <li>При мейозе происходит редукция числа хромосом вдвое → образуются гаметы (сперматозоиды и яйцеклетки);</li>
+              <li>в анафазе I расходятся гомологичные хромосомы, а в анафазе II — сестринские хроматиды;</li>
+              <li>это обеспечивает независимое расхождение хромосом и, соответственно, независимое наследование признаков.</li>
+            </ul>
+            <p><strong>Кроссинговер</strong> (обмен участками между гомологичными хромосомами) повышает генетическое разнообразие и влияет на комбинации признаков.</p>
+            <p><em>Таким образом, законы наследования основаны на закономерностях поведения хромосом при мейозе.</em></p>
+          </div>
+          <div class="glass">
+            <span class="pill">Многогибридное скрещивание</span>
+            <p>Многогибридное скрещивание — это скрещивание организмов, которые отличаются по трём и более признакам. (Если по двум — это дигибридное, по трём — тригибридное и т.д.)</p>
+            <ul>
+              <li>При многогибридном скрещивании гены каждого признака распределяются в гаметы независимо друг от друга (если они находятся в разных хромосомах или далеко друг от друга в одной хромосоме).</li>
+              <li>Число типов гамет определяется по формуле: <strong>2<sup>n</sup></strong>, где n — число гетерозиготных пар. Например, для АаВвСс → 2<sup>3</sup> = 8.</li>
+              <li>Соотношение фенотипов в потомстве можно вычислить с помощью решётки Пеннета или закона умножения вероятностей.</li>
+            </ul>
+            <div class="qa">
+              <p><strong>Пример:</strong> АаВвСс × АаВвСс → у каждого по 8 типов гамет (ABC, ABc, AbC, Abc, aBC, aBc, abC, abc); всего сочетаний 64; фенотипы подчиняются закону независимого наследования.</p>
+              <blockquote>✨ История внутри клетки — не сухая теория, а маленькая книжка для любопытных. <a href="https://gemini.google.com/share/fcc2394410f6" target="_blank" rel="noopener">Перейти к истории</a></blockquote>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Задания -->
+  <section id="tasks">
+    <div class="wrap">
+      <div class="glass">
+        <h2 class="hero-title">Практикум</h2>
+        <p class="note">Сначала выполни задания. Ключ откроется после отметки «Готово».</p>
+
+        <h3>Задание 1. Верно/неверно</h3>
+        <ol id="tf-list" class="glass">
+          <!-- 10 утверждений -->
+        </ol>
+        <button class="btn" id="mark-tf">Отметить «Готово»</button>
+        <details id="tf-answers" disabled>
+          <summary>Показать правильные ответы</summary>
+          <div class="answer-key" id="tf-key"></div>
+        </details>
+
+        <h3>Задание 2. Установи соответствие</h3>
+        <div class="glass">
+          <p>Соотнеси понятие и определение:</p>
+          <div class="grid" id="match-task"></div>
+          <button class="btn" id="mark-match">Отметить «Готово»</button>
+          <details id="match-answers" disabled>
+            <summary>Показать правильные ответы</summary>
+            <div class="answer-key">
+              1 — В (Аллель — разные состояния одного гена) <br/>
+              2 — Г (Генотип — совокупность всех генов организма) <br/>
+              3 — А (Фенотип — совокупность всех признаков организма) <br/>
+              4 — Б (Гомозигота — два одинаковых аллеля одного гена) <br/>
+              5 — Д (Гетерозигота — два разных аллеля одного гена)
+            </div>
+          </details>
+        </div>
+
+        <h3>Задача 1 (морские свинки)</h3>
+        <div class="glass">
+          <p>У морских свинок чёрный цвет шерсти (А) доминирует над белым (а). Скрестили АА × аа.</p>
+          <p><strong>Вопросы:</strong></p>
+          <ol>
+            <li>Какой генотип и фенотип будет у первого поколения (F₁)?</li>
+            <li>Если свинок F₁ скрестить между собой, какое будет расщепление по генотипу и фенотипу в F₂?</li>
+          </ol>
+          <textarea id="task1" rows="4" style="width:100%;"></textarea><br/>
+          <button class="btn" id="mark-p1">Отметить «Готово»</button>
+          <details id="p1-answers" disabled>
+            <summary>Показать правильный ответ</summary>
+            <div class="answer-key">
+              F₁: все Аа, фенотип — чёрные. <br/>
+              F₂ при Аа×Аа: генотипы 1 АА : 2 Аа : 1 аа; фенотипы 3 чёрных : 1 белый.
+            </div>
+          </details>
+        </div>
+
+        <h3>Задача 2 (горох)</h3>
+        <div class="glass">
+          <p>У гороха жёлтые семена (А) доминируют над зелёными (а). Скрестили Аа × Аа.</p>
+          <ol>
+            <li>Какие возможные генотипы у потомства?</li>
+            <li>Соотношение по генотипу?</li>
+            <li>Соотношение по фенотипу?</li>
+          </ol>
+          <textarea id="task2" rows="4" style="width:100%;"></textarea><br/>
+          <button class="btn" id="mark-p2">Отметить «Готово»</button>
+          <details id="p2-answers" disabled>
+            <summary>Показать правильный ответ</summary>
+            <div class="answer-key">
+              Генотипы: АА, Аа, аа. <br/>
+              Соотношение генотипов: 1:2:1. <br/>
+              Соотношение фенотипов: 3 жёлтых : 1 зелёный.
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Тест -->
+  <section id="test">
+    <div class="wrap">
+      <div class="glass">
+        <h2 class="hero-title">Контрольный тест</h2>
+        <p class="rule">Правило: у тебя есть <strong>3 минуты</strong>. После окончания времени ответы менять нельзя. Перезагрузка страницы или переход на другие вкладки блокируют тест — пройти повторно <strong>нельзя</strong>.</p>
+
+        <div class="grid">
+          <div class="glass">
+            <label>Имя ученика</label>
+            <input type="text" id="student-name" placeholder="Введите имя" />
+            <div style="margin-top:10px">
+              <span class="pill">Выбор варианта</span><br/>
+              <label><input type="radio" name="variant" value="1" checked /> Вариант 1</label>
+              <label><input type="radio" name="variant" value="2" /> Вариант 2</label>
+            </div>
+            <div style="margin-top:12px; display:flex; gap:10px; align-items:center">
+              <button class="btn" id="start-test">Начать тест</button>
+              <span class="timer" id="timer" style="display:none">03:00</span>
+              <button class="btn warn" id="submit-test" style="display:none">Завершить</button>
+              <button class="btn alt" id="reset-lock" title="Только для учителя" style="margin-left:auto; display:none">Снять блокировку</button>
+            </div>
+            <p id="lock-msg" class="note" style="display:none;"></p>
+          </div>
+
+          <div class="glass" id="test-area" style="position:relative; display:none">
+            <div class="disabled-overlay" id="overlay"><strong>Доступ закрыт</strong></div>
+            <form id="test-form"></form>
+          </div>
+        </div>
+
+        <div id="result" class="glass" style="display:none; margin-top:16px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Домашнее задание -->
+  <section id="homework">
+    <div class="wrap">
+      <div class="glass">
+        <h2 class="hero-title">Домашнее задание</h2>
+        <ol>
+          <li>Составь схему моногибридного скрещивания для любого растения или животного (можно придумать свой пример).
+            <ul>
+              <li>Укажи генотипы родителей, генотипы гамет, схему скрещивания и результаты в F₁ и F₂.</li>
+            </ul>
+          </li>
+          <li>Напиши небольшой вывод (5–6 предложений):
+            <ul>
+              <li>что показывает моногибридное скрещивание;</li>
+              <li>какие закономерности можно наблюдать в расщеплении признаков.</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+      <div class="footer">© Учебный модуль по генетике</div>
+    </div>
+  </section>
+
+  <script>
+    // ---------- Tabs ----------
+    const tabs = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('section');
+    function activate(tabId){
+      tabs.forEach(b=>b.classList.toggle('active', b.dataset.tab===tabId));
+      sections.forEach(s=>s.classList.toggle('active', s.id===tabId));
+      location.hash = tabId;
+    }
+    tabs.forEach(b=>b.addEventListener('click',()=>activate(b.dataset.tab)));
+    if(location.hash){ activate(location.hash.replace('#','')); }
+    else { activate('theory'); }
+
+    // ---------- Tasks content ----------
+    const tfStatements = [
+      "Хромосомы являются носителями наследственной информации.", // true
+      "При мейозе каждая пара гомологичных хромосом расходится в разные гаметы.", // true
+      "Моногибридное скрещивание — это скрещивание организмов, отличающихся по трём признакам.", // false
+      "При моногибридном скрещивании изучается наследование одного признака.", // true
+      "При мейозе число хромосом в клетке увеличивается в два раза.", // false
+      "Гены, отвечающие за один и тот же признак, могут находиться в одинаковых или разных состояниях (аллелях).", // true
+      "При оплодотворении зигота получает по одному набору хромосом от каждого родителя.", // true
+      "В процессе мейоза возможен кроссинговер, который усиливает разнообразие наследственных комбинаций.", // true
+      "Гомозиготный организм имеет два одинаковых аллеля одного гена.", // true
+      "Результаты моногибридного скрещивания можно предсказать с помощью решётки Пеннета." // true
+    ];
+    const tfCorrect = [true, true, false, true, false, true, true, true, true, true];
+    const tfList = document.getElementById('tf-list');
+    tfStatements.forEach((txt, i)=>{
+      const li = document.createElement('li');
+      const box = document.createElement('div');
+      box.className='q';
+      box.innerHTML = \`
+        <legend>\${i+1}. \${txt}</legend>
+        <label><input type="radio" name="tf\${i}" value="true"> Верно</label>
+        <label><input type="radio" name="tf\${i}" value="false"> Неверно</label>
+      \`;
+      li.appendChild(box);
+      tfList.appendChild(li);
+    });
+    document.getElementById('mark-tf').onclick = ()=>{
+      const allAnswered = tfStatements.every((_,i)=>document.querySelector('input[name="tf'+i+'"]:checked'));
+      if(!allAnswered){ alert('Ответь на все утверждения.'); return; }
+      document.getElementById('tf-answers').removeAttribute('disabled');
+      const key = tfCorrect.map((v,i)=>\`\${i+1}. \${v?'Верно':'Неверно'}\`).join('<br/>');
+      document.getElementById('tf-key').innerHTML = key;
+    };
+
+    const matchData = [
+      {id:1, term:'Аллель', options:['А','Б','В','Г','Д']},
+      {id:2, term:'Генотип', options:['А','Б','В','Г','Д']},
+      {id:3, term:'Фенотип', options:['А','Б','В','Г','Д']},
+      {id:4, term:'Гомозигота', options:['А','Б','В','Г','Д']},
+      {id:5, term:'Гетерозигота', options:['А','Б','В','Г','Д']},
+    ];
+    const matchCorrect = {1:'В',2:'Г',3:'А',4:'Б',5:'Д'};
+    const matchWrap = document.getElementById('match-task');
+    matchData.forEach(row=>{
+      const card = document.createElement('div');
+      card.className='q';
+      card.innerHTML = \`<legend>\${row.id}. \${row.term}</legend>\` + row.options.map(o=>\`
+        <label><input type="radio" name="m\${row.id}" value="\${o}"> \${o}</label>
+      \`).join('');
+      matchWrap.appendChild(card);
+    });
+    document.getElementById('mark-match').onclick = ()=>{
+      const ok = Object.keys(matchCorrect).every(k=>document.querySelector('input[name="m'+k+'"]:checked'));
+      if(!ok){ alert('Ответь на все пункты.'); return; }
+      document.getElementById('match-answers').removeAttribute('disabled');
+    };
+    const enableAnswer = (btnId, detailsId, textId) => {
+      document.getElementById(btnId).onclick = ()=>{
+        const val = document.getElementById(textId).value.trim();
+        if(val.length<10){ alert('Дай развернутый ответ (минимум 10 символов).'); return; }
+        document.getElementById(detailsId).removeAttribute('disabled');
+      };
+    };
+    enableAnswer('mark-p1','p1-answers','task1');
+    enableAnswer('mark-p2','p2-answers','task2');
+
+    // ---------- Test data ----------
+    const variants = {
+      1: [
+        {q:'Что является носителем наследственной информации в клетке?', a:['Белки','ДНК','Рибосомы','Углеводы'], c:1},
+        {q:'Как называются разные формы одного и того же гена?', a:['Хромосомы','Аллели','Гаметы','Центромеры'], c:1},
+        {q:'Если у организма генотип Аа, он является:', a:['Гомозиготой доминантной','Гомозиготой рецессивной','Гетерозиготой','Гаплоидом'], c:2},
+        {q:'Какой процесс лежит в основе образования гамет?', a:['Митоз','Мейоз','Дупликация ДНК','Деление клетки на две части'], c:1},
+        {q:'Доминантный признак проявляется у:', a:['Только у гомозигот','Только у рецессивных особей','У гомо- и гетерозигот','Никогда'], c:2},
+        {q:'Что показывает моногибридное скрещивание?', a:['Наследование признака, контролируемого одной парой генов','Наследование нескольких признаков','Мутации','Изменчивость'], c:0},
+        {q:'Какое расщепление по фенотипу наблюдается во втором поколении при Аа × Аа?', a:['3:1','1:1','9:3:3:1','2:1'], c:0},
+        {q:'В каком поколении всегда проявляется единообразие гибридов?', a:['F₁','F₂','P','F₃'], c:0},
+        {q:'Генотипы родителей: один доминантный гомозигот и другой рецессивный:', a:['Аа × Аа','АА × аа','Аа × аа','АА × АА'], c:1},
+        {q:'Какое расщепление по генотипу будет во втором поколении при Аа × Аа?', a:['1:1','3:1','1:2:1','9:3:3:1'], c:2},
+      ],
+      2: [
+        {q:'Что изучает генетика?', a:['Взаимосвязь организмов в экосистеме','Наследственность и изменчивость','Фотосинтез','Развитие эмбриона'], c:1},
+        {q:'Что означает запись “АА”?', a:['Гомозигота доминантная','Гомозигота рецессивная','Гетерозигота','Аллель'], c:0},
+        {q:'Как называется полный набор хромосом клетки?', a:['Генотип','Кариотип','Фенотип','Гамета'], c:1},
+        {q:'Какой генотип будет у гамет организма Аа?', a:['А и а','АА','аа','Аа'], c:0},
+        {q:'Какой термин обозначает внешние признаки организма?', a:['Генотип','Аллель','Фенотип','Хромосома'], c:2},
+        {q:'Какое соотношение по фенотипу получится в F₂ при Аа × Аа (А — красный)?', a:['1 красный : 1 белый','3 красных : 1 белый','2 красных : 1 белый','4 красных'], c:1},
+        {q:'Какой закон объясняет единообразие гибридов первого поколения?', a:['Закон расщепления','Закон доминирования','Закон сцепленного наследования','Закон независимого наследования'], c:1},
+        {q:'Что образуется после мейоза?', a:['Диплоидные клетки','Четыре гаплоидные гаметы','Две одинаковые клетки','Споры и ризоиды'], c:1},
+        {q:'Какой генотип будет у всех особей F₁ при АА × аа?', a:['Аа','АА','аа','1 АА : 1 аа'], c:0},
+        {q:'Какое соотношение по генотипу в F₂ при Аа × Аа?', a:['1:1','1:2:1','3:1','2:2'], c:1},
+      ]
+    };
+
+    const startBtn = document.getElementById('start-test');
+    const submitBtn = document.getElementById('submit-test');
+    const testArea = document.getElementById('test-area');
+    const testForm = document.getElementById('test-form');
+    const timerEl = document.getElementById('timer');
+    const overlay = document.getElementById('overlay');
+    const lockMsg = document.getElementById('lock-msg');
+    const nameInput = document.getElementById('student-name');
+    const resetLock = document.getElementById('reset-lock');
+
+    const LS_LOCK = 'genetics_test_locked';
+    const LS_STARTED = 'genetics_test_started';
+
+    function isLocked(){
+      return localStorage.getItem(LS_LOCK)==='1';
+    }
+    function lock(reason){
+      localStorage.setItem(LS_LOCK, '1');
+      stopTimer();
+      disableTestUI();
+      lockMsg.style.display='block';
+      lockMsg.innerHTML = 'Доступ к тесту закрыт. Причина: ' + reason + '. Обратитесь к учителю.';
+      overlay.classList.add('show');
+    }
+    function disableTestUI(){
+      document.querySelectorAll('#test-form input').forEach(i=>i.disabled=true);
+      startBtn.disabled = true;
+      submitBtn.disabled = true;
+      document.querySelectorAll('input[name="variant"]').forEach(i=>i.disabled=true);
+      nameInput.disabled = true;
+      timerEl.style.opacity = .6;
+    }
+    function buildVariant(v){
+      testForm.innerHTML = '';
+      variants[v].forEach((it, idx)=>{
+        const fs = document.createElement('fieldset');
+        fs.className = 'q';
+        const lg = document.createElement('legend');
+        lg.textContent = (idx+1)+'. '+it.q;
+        fs.appendChild(lg);
+        it.a.forEach((opt,j)=>{
+          const lab=document.createElement('label');
+          lab.innerHTML = '<input type="radio" name="q'+idx+'" value="'+j+'"> '+opt;
+          fs.appendChild(lab);
+        });
+        testForm.appendChild(fs);
+      });
+    }
+
+    // Timer 3 minutes
+    let tLeft = 180, tId = null;
+    function startTimer(){
+      timerEl.style.display='inline-block';
+      submitBtn.style.display='inline-block';
+      tLeft = 180;
+      tick();
+      tId = setInterval(tick, 1000);
+    }
+    function stopTimer(){ if(tId){ clearInterval(tId); tId=null; } }
+    function tick(){
+      const m = String(Math.floor(tLeft/60)).padStart(2,'0');
+      const s = String(tLeft%60).padStart(2,'0');
+      timerEl.textContent = m+':'+s;
+      if(tLeft<=0){
+        lock('время вышло');
+      }
+      tLeft--;
+    }
+
+    // Start test
+    startBtn.onclick = ()=>{
+      if(isLocked()){ lockMsg.style.display='block'; return; }
+      const name = nameInput.value.trim();
+      if(!name){ alert('Введите имя.'); return; }
+      const v = document.querySelector('input[name="variant"]:checked').value;
+      buildVariant(v);
+      testArea.style.display='block';
+      startBtn.disabled = true;
+      document.querySelectorAll('input[name="variant"]').forEach(i=>i.disabled=true);
+      nameInput.disabled = true;
+      localStorage.setItem(LS_STARTED, '1');
+      startTimer();
+    };
+
+    // Submit
+    submitBtn.onclick = ()=>{
+      if(isLocked()) return;
+      const v = document.querySelector('input[name="variant"]:checked').value;
+      const data = variants[v];
+      let score = 0;
+      for(let i=0;i<data.length;i++){
+        const ch = document.querySelector('input[name="q'+i+'"]:checked');
+        if(ch && Number(ch.value)===data[i].c) score++;
+      }
+      const result = document.getElementById('result');
+      result.style.display='block';
+      result.innerHTML = '<strong>Результат:</strong> '+score+' из '+data.length;
+      lock('тест отправлен');
+    };
+
+    // Locks on reload or tab switch away
+    window.addEventListener('beforeunload', ()=>{
+      if(localStorage.getItem(LS_STARTED)==='1' && !isLocked()){
+        localStorage.setItem(LS_LOCK,'1');
+      }
+    });
+    // Leaving section "test" or switching browser tab
+    window.addEventListener('hashchange', ()=>{
+      if(localStorage.getItem(LS_STARTED)==='1' && !isLocked()){
+        lock('вкладка переключена');
+      }
+    });
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.hidden && localStorage.getItem(LS_STARTED)==='1' && !isLocked()){
+        lock('вышел из вкладки');
+      }
+    });
+
+    // On load: check lock
+    function initLockState(){
+      if(isLocked()){
+        overlay.classList.add('show');
+        disableTestUI();
+        lockMsg.style.display='block';
+        lockMsg.textContent = 'Доступ к тесту закрыт. Перезагрузка или ранее завершенный тест.';
+        testArea.style.display='block';
+        resetLock.style.display='inline-block'; // teacher control (optional)
+      }
+    }
+    initLockState();
+    // OPTIONAL: teacher-only unlock (for проверки/повторной попытки вручную)
+    resetLock.onclick = ()=>{
+      localStorage.removeItem(LS_LOCK);
+      localStorage.removeItem(LS_STARTED);
+      location.reload();
+    };
+  </script>
+</body>
+</html>
